@@ -4,12 +4,15 @@ __pycache__/
 
 # Virtual env
 .venv/
-env/
 venv/
+env/
 
 # Cache
 media/cache/
 
-# OS files
+# Secrets
+.env
+
+# OS
 .DS_Store
 Thumbs.db
