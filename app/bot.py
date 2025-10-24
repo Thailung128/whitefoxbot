@@ -63,7 +63,6 @@ async def on_about(cb: types.CallbackQuery):
 @dp.callback_query(F.data == "ask")
 async def on_ask(cb: types.CallbackQuery, state: FSMContext):
     await state.set_state(Form.waiting_question)
-    # обновлённый текст:
     await cb.message.edit_text(
         "Сформулируйте ваш вопрос <b>одним сообщением</b> ✍️\n"
         "Например:\n"
@@ -119,15 +118,15 @@ async def on_spread(cb: types.CallbackQuery, state: FSMContext):
     await cb.answer()
 
 
+# ✅ Универсальный «Назад»: удаляем превью (фото/текст) и возвращаем список раскладов
 @dp.callback_query(F.data == "back_to_spreads")
 async def back_to_spreads(cb: types.CallbackQuery, state: FSMContext):
-    """Работает в любом состоянии, возвращает к выбору раскладов."""
     await state.set_state(Form.chosen_spread)
     try:
-        await cb.message.edit_text("Выберите расклад:", reply_markup=SPREADS_KB)
+        await cb.message.delete()  # удаляем сообщение с превью (и кнопкой «Назад»)
     except Exception:
-        # Если сообщение нельзя редактировать — просто отправляем новое
-        await cb.message.answer("Выберите расклад:", reply_markup=SPREADS_KB)
+        pass
+    await cb.message.answer("Выберите расклад:", reply_markup=SPREADS_KB)
     await cb.answer()
 
 
