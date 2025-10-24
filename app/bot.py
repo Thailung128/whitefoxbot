@@ -121,11 +121,16 @@ async def on_spread(cb: types.CallbackQuery, state: FSMContext):
 # ✅ Универсальный «Назад»: удаляем превью (фото/текст) и возвращаем список раскладов
 @dp.callback_query(F.data == "back_to_spreads")
 async def back_to_spreads(cb: types.CallbackQuery, state: FSMContext):
+    """Удаляет и превью, и старое сообщение с выбором расклада."""
     await state.set_state(Form.chosen_spread)
     try:
-        await cb.message.delete()  # удаляем сообщение с превью (и кнопкой «Назад»)
+        # Удаляем текущее сообщение (превью)
+        await cb.message.delete()
+        # Пытаемся удалить предыдущее сообщение (если есть)
+        await cb.message.chat.delete_message(cb.message.message_id - 1)
     except Exception:
         pass
+    # Отправляем новое одно сообщение "Выберите расклад"
     await cb.message.answer("Выберите расклад:", reply_markup=SPREADS_KB)
     await cb.answer()
 
