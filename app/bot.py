@@ -63,7 +63,14 @@ async def on_about(cb: types.CallbackQuery):
 @dp.callback_query(F.data == "ask")
 async def on_ask(cb: types.CallbackQuery, state: FSMContext):
     await state.set_state(Form.waiting_question)
-    await cb.message.edit_text("Напишите ваш вопрос одним сообщением ✍️")
+    # обновлённый текст:
+    await cb.message.edit_text(
+        "Сформулируйте ваш вопрос <b>одним сообщением</b> ✍️\n"
+        "Например:\n"
+        "• «Какой совет на ближайшую неделю?»\n"
+        "• «Что важно понять про отношения?»\n"
+        "• «В каком направлении двигаться в карьере?»"
+    )
     await cb.answer()
 
 
@@ -118,7 +125,7 @@ async def back_to_spreads(cb: types.CallbackQuery):
     await cb.answer()
 
 
-# 🔁 Перетасовка → вытягивание (фото с круглыми углами) → интерпретация → финал
+# 🔁 Перетасовка → вытягивание → интерпретация → финал
 @dp.callback_query(F.data.startswith("shuffle:"))
 async def on_shuffle(cb: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
@@ -151,7 +158,7 @@ async def on_shuffle(cb: types.CallbackQuery, state: FSMContext):
 
         caption = f"Карта открывается… ✨\n<b>{md_escape(pos_name)}</b> — {md_escape(shown_name)}"
 
-        # Скругляем углы: генерим PNG с белой подложкой и шлём как фото
+        # Скругляем углы и отправляем как фото
         photo_path = None
         if card.image_path and os.path.exists(card.image_path):
             photo_path = rounded_image_path(card.image_path, radius=48) or card.image_path

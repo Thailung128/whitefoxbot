@@ -19,7 +19,7 @@ MAIN_MENU = InlineKeyboardMarkup(
     ]
 )
 
-# ---- Клавиатура с раскладами ----
+# ---- Клавиатура с раскладами (БЕЗ кнопки «Назад») ----
 SPREADS_KB = InlineKeyboardMarkup(
     inline_keyboard=[
         [
@@ -37,9 +37,6 @@ SPREADS_KB = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(text="Дерево жизни", callback_data="spread:tree_of_life"),
             InlineKeyboardButton(text="Кельтский крест", callback_data="spread:celtic"),
-        ],
-        [
-            InlineKeyboardButton(text="⬅️ Назад", callback_data="back_to_main"),
         ],
     ]
 )
