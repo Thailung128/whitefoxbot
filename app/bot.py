@@ -120,8 +120,14 @@ async def on_spread(cb: types.CallbackQuery, state: FSMContext):
 
 
 @dp.callback_query(F.data == "back_to_spreads")
-async def back_to_spreads(cb: types.CallbackQuery):
-    await cb.message.edit_text("Выберите расклад:", reply_markup=SPREADS_KB)
+async def back_to_spreads(cb: types.CallbackQuery, state: FSMContext):
+    """Работает в любом состоянии, возвращает к выбору раскладов."""
+    await state.set_state(Form.chosen_spread)
+    try:
+        await cb.message.edit_text("Выберите расклад:", reply_markup=SPREADS_KB)
+    except Exception:
+        # Если сообщение нельзя редактировать — просто отправляем новое
+        await cb.message.answer("Выберите расклад:", reply_markup=SPREADS_KB)
     await cb.answer()
 
 
